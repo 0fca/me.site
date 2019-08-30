@@ -264,3 +264,27 @@ textarea {
   }
 }
 
+.dark{
+  background-color: #212121 !important;
+}
+
+.indicator-item{
+
+  background-color: #03A9F4 !important;
+}
+
+.indicator-item:active{
+
+  background-color: #212121 !important;
+}
+
+.responded {
+  color: #03A9F4;
+}
+.checking,.unchecked {
+  color:#FF8C00;
+}
+.error {
+  color:red;
+}
+
