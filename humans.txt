@@ -3,13 +3,13 @@
 
 # TEAM
 
-    <name> -- <role> -- <twitter>
+    Dev: Łukasz Bownik -- https://www.facebook.com/obsidiam
 
 # THANKS
 
-    <name>
+    Dominik Drąg, Franek Łaniewski, Basia Pałyszka
 
 # TECHNOLOGY COLOPHON
 
     CSS3, HTML5
-    Apache Server Configs, jQuery, Modernizr, Normalize.css
+    Apache Server Configs, jQuery, Modernizr, Normalize.css, Kockout.js, Materializecss

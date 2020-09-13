@@ -1,12 +1,12 @@
 {
-  "short_name": "",
-  "name": "",
+  "short_name": "me.site",
+  "name": "me.site - Łukasz 'Arkasian' Bownik Portfolio",
   "icons": [{
-    "src": "icon.png",
+    "src": "favicon.ico",
     "type": "image/png",
     "sizes": "192x192"
   }],
-  "start_url": "/?utm_source=homescreen",
+  "start_url": "/",
   "background_color": "#fafafa",
-  "theme_color": "#fafafa"
+  "theme_color": "#FF008080"
 }
