@@ -1,16 +1,21 @@
 html {
-  color: #222;
+  color: whitesmoke;
   font-size: 15px;
   line-height: 1.4;
+  background-color: #212121;
+}
+
+a:hover{
+  color: #607FBA;
 }
 
 ::-moz-selection {
-  background: #b3d4fc;
+  background: #607FBA;
   text-shadow: none;
 }
 
 ::selection {
-  background: #b3d4fc;
+  background: #607FBA;
   text-shadow: none;
 }
 
@@ -45,8 +50,8 @@ textarea {
 
 .browserupgrade {
   margin: 0.2em 0;
-  background: #ccc;
-  color: #000;
+  background: rgb(12, 12, 12);
+  color: whitesmoke;
   padding: 0.2em 0;
 }
 
@@ -168,30 +173,6 @@ textarea {
   background-color: #212121 !important;
 }
 
-.indicator-item{
-  background-color: #607FBA!important;
-}
-
-.indicator-item.active{
-  background-color: #222222 !important;
-}
-
-.responded {
-  color: teal;
-}
-.checking,.unchecked {
-  color:#FF8C00;
-}
-.error {
-  color:red;
-}
-
-blockquote{
-  margin: 20px 0;
-  padding-left: 1.5rem;
-  border-left: 5px solid #607FBA !important; /* Just change the color value and that's it*/
-}
-
 .section_paragraph{
 	font-size: 1.15em;
 }
@@ -208,17 +189,17 @@ blockquote{
 }
 
 .dark{
-  /**
-  #607d8b - original cobalt color
-   */
-  background-color: #607FBA !important;
+  background-color: rgb(12, 12, 12) !important;
+}
+
+.accent-text{
+  color: #607FBA !important;
 }
 
 .pika-card-padding{
   padding-top: 15px;
 }
 
-.accent-text{
-  color: #212121;
+.btn-flat:hover{
+  background-color: #607FBA !important;
 }
-
