@@ -2,7 +2,7 @@
   "short_name": "me.site",
   "name": "me.site - Łukasz 'Arkasian' Bownik Portfolio",
   "icons": [{
-    "src": "favicon.ico",
+    "src": "img/pikacloud.png",
     "type": "image/png",
     "sizes": "192x192"
   }],
