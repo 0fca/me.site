@@ -15,15 +15,14 @@
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/screen.css">
-  <link rel="stylesheet" href="css/material-icons.css">
-  <link type="text/plain" rel="author" href="humans.txt" />
+   <link type="text/plain" rel="author" href="humans.txt" />
   <link rel="stylesheet" href="https://unpkg.com/terminal.css@0.7.2/dist/terminal.min.css" />
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
 
-<body id="app" class="fullscreen">
-  <main style="background-color: #607FBA; height: 100vh; ">
-    <div class="screen">
+<body id="app">
+  <main style="background-color: #607FBA; height: 100vh;">
+    <div class="screen center">
       <div class="screen-grid terminal-prompt" ref="screengrid">
         {{ message }}
       </div>
@@ -45,7 +44,7 @@
   const sources = [
     "S1"
   ];
-  const baseUrl = "http://core.cloud.localhost:5000/Api/v1/Command";
+  const baseUrl = "https://core.lukas-bownik.net/Api/v1/Command";
   createApp({
     data() {
       return {
@@ -128,7 +127,6 @@
               let jsonPayload = t.output.split("=")[1];
               const payload = JSON.parse(jsonPayload);
               const payloadKeys = Object.keys(payload);
-              console.log(payloadKeys);
               let resultText = "PROP\tVALUE\n";
               for(const k in payloadKeys){
                 resultText += `${payloadKeys[k]}\t${payload[payloadKeys[k]]}\n`;
@@ -160,10 +158,19 @@
           commandsText += commands[cmd] + "\n";
         }
         this.refreshScreen(commandsText);
+        this.printLogo();
       },
       reset(){
         this.commandBuffer = "";
         this.refreshScreen(`MAX SRC# - ${sources.length}, CLOUD CONSOLE # ${source}`, false);
+      },
+      printLogo() {
+
+        fetch('/logo.txt')
+          .then(r => r.text())
+          .then(r => {
+            this.refreshScreen(r.replace("%S", source), true);
+          });
       }
     }
   }).mount('#app')

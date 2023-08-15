@@ -10,11 +10,17 @@
     width: 80vw;
     position: relative;
     top: 5rem;
-    left: 10rem;
     border-top-left-radius: 8%;
     border-top-right-radius: 8%;
     border-bottom-left-radius: 8%;
     border-bottom-right-radius: 8%;
+
+}
+
+.center {
+  margin: auto;
+  width: 80%;
+  padding: 10px;
 }
 
 .screen-grid {
