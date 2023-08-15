@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html class="no-js" lang="en">
 
 <head>
   <meta charset="utf-8">
@@ -19,14 +19,12 @@
   <link type="text/plain" rel="author" href="humans.txt" />
   <link rel="stylesheet" href="https://unpkg.com/terminal.css@0.7.2/dist/terminal.min.css" />
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-  <script src="js/plugins.js" defer></script>
-  <script src="js/site.js" defer></script>
 </head>
 
 <body id="app" class="fullscreen">
   <main style="background-color: #607FBA; height: 100vh; ">
-    <div class="screen" tabindex="0">
-      <div class="screen-grid" ref="screengrid">
+    <div class="screen">
+      <div class="screen-grid terminal-prompt" ref="screengrid">
         {{ message }}
       </div>
     </div>
@@ -47,7 +45,7 @@
   const sources = [
     "S1"
   ];
-  const baseUrl = "https://core.lukas-bownik.net/Api/v1/Command";
+  const baseUrl = "http://core.cloud.localhost:5000/Api/v1/Command";
   createApp({
     data() {
       return {
@@ -67,21 +65,25 @@
         if($this.validateKeyboardKey(evt.key) || $this.validateKeyboardCode(evt.keyCode)){
           $this.$refs.screengrid.innerText += evt.key;
           commandBuffer += evt.key;
-          $this.$refs.screengrid.scrollTo(0, $this.$refs.screengrid.scrollTop + 1);
         }
+        $this.$refs.screengrid.scrollTo(0, $this.$refs.screengrid.scrollTop + $this.$refs.screengrid.offsetHeight);
       });
     },
     methods: {
       executeCommand(command) {
         command = command.toUpperCase();
-        if(!sourceChosen && sources.includes(command)){
+        commandSlices = command.split(" ");
+        commandName = commandSlices[0];
+        args = commandSlices.slice(1, commandSlices.length);
+
+        if(!sourceChosen && sources.includes(commandName)){
           this.setSource(command);
           return;
         }
-        if(sourceChosen && commands.includes(command)){
+        if(sourceChosen && commands.includes(commandName)){
           // If the command starts with . it is a remote command, otherwise local
           if(command.startsWith(".")){
-            this.executeApiCall(command);
+            this.executeApiCall(commandName, args);
           } else {
             if(command === "?") {
               this.printCommands();
@@ -97,7 +99,7 @@
         }
       },
       validateKeyboardKey(input) {
-        return input == '.' || input == "?";
+        return input == '.' || input == "?" || input == " ";
       },
       validateKeyboardCode(code) {
          // Small ASCII letters and digits
@@ -107,19 +109,38 @@
         commandBuffer = commandBuffer.substring(0, commandBuffer.length - 1);
         this.$refs.screengrid.innerText = commandBuffer;
       },
-      refreshScreen(output) {
-        this.$refs.screengrid.innerText = output;
+      refreshScreen(output, append = true) {
+        if(!append){
+          this.$refs.screengrid.innerText = output;
+        } else {
+          this.$refs.screengrid.innerText += '\n' + output;
+        }
       },
-      executeApiCall(command) {
-        fetch(`${baseUrl}/${command.toUpperCase()}`,
+      executeApiCall(command, args) {
+        fetch(`${baseUrl}/${command.toUpperCase()}?body=${args}`,
         {
-          method: 'POST',
-          headers: {
-            "Origin": "localhost:5000"
-          }
+          method: 'POST'
         })
         .then(r => {
-            console.log(r);
+          if(r.status === 200){
+             r.json()
+            .then(t => {
+              let jsonPayload = t.output.split("=")[1];
+              const payload = JSON.parse(jsonPayload);
+              const payloadKeys = Object.keys(payload);
+              console.log(payloadKeys);
+              let resultText = "PROP\tVALUE\n";
+              for(const k in payloadKeys){
+                resultText += `${payloadKeys[k]}\t${payload[payloadKeys[k]]}\n`;
+              }
+              this.refreshScreen(resultText);
+            })
+            .catch(e => {
+              this.refreshScreen(`!ERROR - ${source} RETURNED UNEXPECTED RESPONSE FORMAT\n`);
+            });
+          } else {
+            this.refreshScreen(`!ERROR - ${source} RETURNED UNEXPECTED RESPONSE\n`);
+          }
         })
         .catch(e => {
             this.refreshScreen(`!ERROR - ${source} RETURNED UNEXPECTED RESPONSE\n`);
@@ -128,26 +149,24 @@
       setSource(command) {
           sourceChosen = true;
           source = command;
-          this.refreshScreen("MAX SRC# - 1, CLOUD CONSOLE #1");
+          this.refreshScreen(`MAX SRC# - ${sources.length}, CLOUD CONSOLE # ${source}`, false);
       },
       askToChooseSource() {
-        this.refreshScreen("S=");
+        this.refreshScreen("S=", false);
       },
       printCommands() {
         let commandsText = "";
         for(let cmd in commands){
           commandsText += commands[cmd] + "\n";
         }
-        this.$refs.screengrid.innerText = commandsText;
+        this.refreshScreen(commandsText);
       },
       reset(){
-        source = null;
-        sourceChosen = false;
-        this.askToChooseSource();
+        this.commandBuffer = "";
+        this.refreshScreen(`MAX SRC# - ${sources.length}, CLOUD CONSOLE # ${source}`, false);
       }
     }
   }).mount('#app')
 </script>
 
 </html>
-
