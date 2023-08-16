@@ -1,25 +1,25 @@
 :root {
   --primary-color: whitesmoke !important;
+  --page-width: 100% !important;
 }
 
 .screen {
-    font-size: 2em;
+    font-size: 1.45em;
     color: whitesmoke;
-    background-color: rgba(12, 12, 12, 0.5);
+    background-color: rgba(12, 12, 12, 1);
     height: 80vh;
     width: 80vw;
     position: relative;
     top: 5rem;
-    border-top-left-radius: 8%;
-    border-top-right-radius: 8%;
-    border-bottom-left-radius: 8%;
-    border-bottom-right-radius: 8%;
-
+    border-top-left-radius: 5%;
+    border-top-right-radius: 5%;
+    border-bottom-left-radius: 5%;
+    border-bottom-right-radius: 5%;
 }
 
 .center {
   margin: auto;
-  width: 80%;
+  width: 95%;
   padding: 10px;
 }
 

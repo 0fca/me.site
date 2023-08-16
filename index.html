@@ -15,16 +15,21 @@
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/screen.css">
+  <link rel="stylesheet" href="css/logo_pane.css">
    <link type="text/plain" rel="author" href="humans.txt" />
   <link rel="stylesheet" href="https://unpkg.com/terminal.css@0.7.2/dist/terminal.min.css" />
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 </head>
 
-<body id="app">
-  <main style="background-color: #607FBA; height: 100vh;">
-    <div class="screen center">
+<body id="app" class="base-colour-bg">
+  <main class="container grid">
+    <div class="left-pane screen center">
       <div class="screen-grid terminal-prompt" ref="screengrid">
         {{ message }}
+      </div>
+    </div>
+    <div class="right-pane logo_pane center">
+      <div class="system_logo" @click="redirectToCore">
       </div>
     </div>
   </main>
@@ -37,7 +42,8 @@
   const commands = [
     ".SYSSTA",
     ".USRNFO",
-    "DIR",
+    ".DIR",
+    ".S.CRT",
     "RST",
     "?"
   ];
@@ -69,6 +75,7 @@
       });
     },
     methods: {
+      // TODO: This method will use some major refactor, should move all commands logic to separated file and use some strategy or sth.
       executeCommand(command) {
         command = command.toUpperCase();
         commandSlices = command.split(" ");
@@ -82,6 +89,9 @@
         if(sourceChosen && commands.includes(commandName)){
           // If the command starts with . it is a remote command, otherwise local
           if(command.startsWith(".")){
+            if(commandName === ".S.CRT"){
+              args = [source, args[0], args[1]];
+            }
             this.executeApiCall(commandName, args);
           } else {
             if(command === "?") {
@@ -92,7 +102,7 @@
             }
           }
         } else if(sourceChosen) {
-          this.refreshScreen("!ERROR");
+          this.refreshScreen("!ERROR - NO SUCH EXECUTABLE OR FILE");
         } else {
           this.askToChooseSource();
         }
@@ -116,7 +126,8 @@
         }
       },
       executeApiCall(command, args) {
-        fetch(`${baseUrl}/${command.toUpperCase()}?body=${args}`,
+        const s = `${args}`.replaceAll(",", " ");
+        fetch(`${baseUrl}/${command.toUpperCase()}?body=${s}`,
         {
           method: 'POST'
         })
@@ -125,11 +136,28 @@
              r.json()
             .then(t => {
               let jsonPayload = t.output.split("=")[1];
-              const payload = JSON.parse(jsonPayload);
-              const payloadKeys = Object.keys(payload);
-              let resultText = "PROP\tVALUE\n";
-              for(const k in payloadKeys){
-                resultText += `${payloadKeys[k]}\t${payload[payloadKeys[k]]}\n`;
+              let resultText = "";
+              try{
+                resultText = "PROP\tVALUE\n";
+                const payload = JSON.parse(jsonPayload);
+                const payloadKeys = Object.keys(payload);
+                for(const k in payloadKeys){
+                  if(payloadKeys[k] === "output") {
+                    output = payload[payloadKeys[k]];
+                    console.log(output);
+                    resultText = "CONTENTS\n";
+                    resultText += `${output}`;
+                    if(Array.isArray(output)){
+                        resultText = resultText.replaceAll(",", "\n");
+                    }
+                    resultText += "\n";
+                  } else {
+                    resultText += `${payloadKeys[k]}\t${payload[payloadKeys[k]]}\n`;
+                  }
+                }
+              }catch(e){
+                resultText = "!ERROR - THERE WAS AN ERROR READING THE FILE\n";
+                //resultText += jsonPayload ?? "";
               }
               this.refreshScreen(resultText);
             })
@@ -165,12 +193,18 @@
         this.refreshScreen(`MAX SRC# - ${sources.length}, CLOUD CONSOLE # ${source}`, false);
       },
       printLogo() {
-
         fetch('/logo.txt')
           .then(r => r.text())
           .then(r => {
             this.refreshScreen(r.replace("%S", source), true);
           });
+      },
+      redirectToCore() {
+        this.refreshScreen("REDIRECTING TO PIKACORE...");
+        setInterval(() => {
+          document.location = "https://core.lukas-bownik.net/";
+        }, 1000);
+
       }
     }
   }).mount('#app')

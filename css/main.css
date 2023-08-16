@@ -4,10 +4,37 @@ html {
     line-height: 1.4;
 }
 
+:root {
+  --background-color: #607FBA !important;
+}
+
 .terminal-prompt::before {
   content: "" !important;
 }
 
 .terminal-prompt {
   white-space: normal !important;
+}
+
+.container {
+  width: 95%;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: [first] 60% [line2] 40%;
+}
+
+.left-pane {
+  display: flex;
+  grid-column-start: 1;
+  grid-column-end: line2;
+}
+
+.right-pane {
+  grid-column-start: line2;
+}
+
+.base-colour-bg {
+  background-color: var(--background-color);
 }

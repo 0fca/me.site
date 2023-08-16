@@ -1,0 +1,30 @@
+:root {
+  --primary-bg-color: #E0BB55;
+  --primary-text-color: whitesmoke;
+}
+
+.logo_pane {
+  font-size: 2em;
+  color: var((--primary-text-color));
+  background-color: var(--primary-bg-color);
+  height: 80vh;
+  position: relative;
+  top: 5rem;
+  border-color: black;
+  border-style: groove;
+  border-top-left-radius: 5%;
+  border-top-right-radius: 5%;
+  border-bottom-left-radius: 5%;
+  border-bottom-right-radius: 5%;
+  cursor: pointer;
+}
+
+.system_logo {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-image: url("../img/pikacloud.svg");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
