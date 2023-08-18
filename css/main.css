@@ -2,6 +2,7 @@ html {
     color: #222;
     font-size: 15px;
     line-height: 1.4;
+    font-family: 'IBM Plex Mono', 'Courier New', Courier, monospace;
 }
 
 :root {
