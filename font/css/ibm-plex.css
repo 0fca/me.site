@@ -3,6 +3,7 @@
   font-style: normal;
   font-weight: 700;
   src: local("IBM Plex Mono Bold"), local("IBMPlexMono-Bold"), url("../IBM-Plex-Mono/fonts/complete/woff2/IBMPlexMono-Bold.woff2") format("woff2"), url("../IBM-Plex-Mono/fonts/complete/woff/IBMPlexMono-Bold.woff") format("woff");
+  font-display: auto;
 }
 @font-face {
   font-family: "IBM Plex Mono";

@@ -43,8 +43,6 @@
   const commands = [
     ".SYSSTA",
     ".USRNFO",
-    ".DIR",
-    ".S.CRT",
     "RST",
     "?"
   ];
@@ -201,9 +199,9 @@
           });
       },
       redirectToCore() {
-        this.refreshScreen("REDIRECTING TO PIKACORE...");
+        this.refreshScreen("REDIRECTING TO PIKA CLOUDFRONT...");
         setInterval(() => {
-          document.location = "https://core.lukas-bownik.net/";
+          document.location = "https://cloud.lukas-bownik.net/";
         }, 1000);
 
       }
