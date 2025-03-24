@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Pika Cloud Console</title>
+  <title>Pika Cloud Console :: Pika Cloud</title>
   <meta property="og:title" content="Cloud's Console" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://lukas-bownik.net/" />
@@ -55,6 +55,7 @@
     "S1"
   ];
   const baseUrl = "https://core.lukas-bownik.net/Api/v1/Command";
+  const statusUrl = "https://core.lukas-bownik.net/Api/v1/status/systems/{system}/version";
   createApp({
     data() {
       return {
@@ -203,6 +204,13 @@
         this.refreshScreen(`MAX SRC# - ${sources.length}, CLOUD CONSOLE # ${source}`, false);
       },
       printLogo() {
+        const ver = fetch(statusUrl.replace('{system}', 'PIKACORE'))
+                      .then(r => r.json())
+                      .then(r => {
+                        console.log(r.version);
+                        return r.version;
+                      });
+        console.log(ver);
         fetch('/logo.txt')
           .then(r => r.text())
           .then(r => {
