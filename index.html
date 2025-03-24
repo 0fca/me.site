@@ -7,9 +7,9 @@
   <meta property="og:title" content="Cloud's Console" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://lukas-bownik.net/" />
-  <meta property="og:description" content="ofca's cloud's console" />
+  <meta property="og:description" content="Pika Cloud Console" />
   <meta property="og:image" content="https://lukas-bownik.net/img/pikacloud_48.png" />
-  <meta name="theme-color" content="#607FBA">
+  <meta name="theme-color" content="#0A4492">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="manifest" href="site.webmanifest">
   <link rel="stylesheet" href="font/css/ibm-plex.css">
@@ -23,7 +23,7 @@
 </head>
 
 <body id="app" class="base-colour-bg">
-  <main class="container grid">
+  <main class="container grid" v-if="this.canViewConsole">
     <div class="left-pane screen center">
       <div class="screen-grid terminal-prompt" ref="screengrid">
         {{ message }}
@@ -32,6 +32,11 @@
     <div class="right-pane logo_pane center">
       <div class="system_logo" @click="redirectToCore">
       </div>
+    </div>
+  </main>
+  <main class="container grid" v-if="this.canViewConsole">
+    <div class="screen center">
+      A cloud console is not available for mobile devices
     </div>
   </main>
 </body>
@@ -53,10 +58,16 @@
   createApp({
     data() {
       return {
-        message: '!INIT ERR'
+        message: '!INIT ERR',
+        canViewConsole: true
       }
     },
     mounted() {
+      const isMobileDevice = this.isTouchScreen();
+      if(isMobileDevice){
+        canViewConsole = false;
+        return;
+      }
       const $this = this;
       this.askToChooseSource();
       document.addEventListener('keydown', function (evt) {
@@ -204,6 +215,28 @@
           document.location = "https://cloud.lukas-bownik.net/";
         }, 1000);
 
+      },
+      isTouchScreen() {
+        let hasTouchScreen = false;
+        if ("maxTouchPoints" in navigator) {
+            hasTouchScreen = navigator.maxTouchPoints > 0;
+        } else if ("msMaxTouchPoints" in navigator) {
+            hasTouchScreen = navigator.msMaxTouchPoints > 0;
+        } else {
+            const mQ = matchMedia?.("(pointer:coarse)");
+            if (mQ?.media === "(pointer:coarse)") {
+                hasTouchScreen = !!mQ.matches;
+            } else if ("orientation" in window) {
+                hasTouchScreen = true; // deprecated, but good fallback
+            } else {
+                // Only as a last resort, fall back to user agent sniffing
+                const UA = navigator.userAgent;
+                hasTouchScreen =
+                    /\b(BlackBerry|webOS|iPhone|IEMobile)\b/i.test(UA) ||
+                    /\b(Android|Windows Phone|iPad|iPod)\b/i.test(UA);
+            }
+        }
+        return hasTouchScreen;
       }
     }
   }).mount('#app')
