@@ -23,7 +23,7 @@
 </head>
 
 <body id="app" class="base-colour-bg">
-  <main class="container grid" v-if="this.canViewConsole">
+  <main class="container grid" v-if="canViewConsole">
     <div class="left-pane screen center">
       <div class="screen-grid terminal-prompt" ref="screengrid">
         {{ message }}
@@ -34,7 +34,7 @@
       </div>
     </div>
   </main>
-  <main class="container grid" v-if="this.canViewConsole">
+  <main class="container" v-if="!canViewConsole">
     <div class="screen center">
       A cloud console is not available for mobile devices
     </div>
@@ -66,7 +66,7 @@
     mounted() {
       const isMobileDevice = this.isTouchScreen();
       if(isMobileDevice){
-        canViewConsole = false;
+        this.canViewConsole = false;
         return;
       }
       const $this = this;
